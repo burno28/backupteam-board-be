@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/burno28/backupteam-board-be#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-json": "^1.0.0",
+    "jsonwebtoken": "^9.0.0"
   }
 }
