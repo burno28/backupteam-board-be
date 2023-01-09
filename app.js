@@ -1,5 +1,5 @@
 const express = require('express')
-const cors = require("cors")
+const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
 //사용하는 npm i
@@ -15,6 +15,12 @@ const port = 4080
 const users = require('./db/users')
 const articles = require('./db/articles')
 //포트 설정,외부 db(로컬내 json으로 구현)
+
+let corsOptions = {
+    origin: 'http://localhost:3080',
+    credentials: true
+}
+//cors 쓰려면 프론트 포트 지정할때 쓴데서 써봤습니다
 
 const jwtConfig = {
     secretKey: "secretKey",//시크렛키
@@ -33,8 +39,6 @@ app.get('/', (req, res) => {
 })
 //게시글 상위 10개 가져오는 API,
 
-
-
 // 로그인 API
 app.post('/login', (req, res) => {
     //     - email, password 받아서 해당하는 유저가 존재하는지 확인
@@ -46,12 +50,20 @@ app.post('/login', (req, res) => {
             errorMessage: '해당 아이디가 없습니다.'
         })
     }
-    const userPass = users.find(user => user.password === password)
-    if (!userPass) {
+    // const userPass = users.find(user => user.password === password)
+    // if (!userPass) {
+    //     res.status(404).json({
+    //         errorMessage: '비밀번호가 틀립니다.'
+    //     })
+    // } //이건 유저 비밀번호가 아닌 그냥 모든 비번중에 찾는거라 틀립니다
+
+    if (user.password !== password) {
         res.status(404).json({
-            errorMessage: '비밀번호가 틀립니다.'
+            errorMessage: '비번이 틀렸습니다.'
         })
     }
+// 고침
+
 
     const token = jwt.sign({ name: user.name, id: user.id }, jwtConfig.secretKey, jwtConfig.options)
     res.cookie('jwt', token)
@@ -59,12 +71,13 @@ app.post('/login', (req, res) => {
     res.send({ result: true })
 })
 
-
-
 app.get('/articles', (req, res) => {
     res.json(articles)
-})
+})//게시글 보기,대강 한번에 다 보임
 
+app.post("/articles", (req, res) => {
+
+})//게시글 쓰기
 
 
 app.listen(port, () => {
