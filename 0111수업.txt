@@ -1,0 +1,31 @@
+mysql 
+
+npm i mysql하라
+
+query를 바로 보여주는 api를 만들면 안된다
+만약 유저정보로 입력하면 다 튀어나옴
+
+
+요즘은 페이지 보여주기 같은거에 offset 많이 씀
+
+첫페이지 
+1: 0, 10
+2: 10, 10
+3: 20, 10
+이런식으로 많이 하는데
+
+const startIndex = (page - 1) * 10
+튜터님 이거를 많이 쓰신다고
+
+const p =page || 1
+con
+const startIndex = ((page||  1) -1) * 10
+
+
+만약 페이지 선택 표기 갯수 조절 사항 있으면
+const perPage =20
+
+const startIndex = ((page||  1) -1) * perPage
+
+이런식으로 perPage만 바꿔서 함
+

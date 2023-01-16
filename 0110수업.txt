@@ -1,0 +1,56 @@
+create table articles (
+    `id` int primary key auto_increment comment "article`s id",
+    `title` varchar(512) notnull comment "title",
+    `content` text not null comment "content",
+    `user_id` int not null  comment "users id from..."
+    `created_at` datetime default current_timestamp,
+    `count` 
+)
+
+각설하고 내 슬랙 이미지 대로
+
+이름 숫자 _아티클스  해서  테이블5개 만들어보기
+이름_users 만들어보기
+articles에 첫 테이블에 데이터 20개씩 넣어보기
+유저스는 5개
+
+물론 유저에 맞는 아티클로 채워라
+
+ articles 테이블 5개 만들기 
+ / article 데이터 20개 넣기 
+ / user 테이블 1개 만들기 
+ / user 데이터 5개 넣기
+
+ insert into post 
+
+ (writer, 
+ title, 
+ content) 
+
+ values 
+ ("bongjin",
+  "i am bongjin", 
+ "this is bongjin's first article");
+
+
+
+
+ mysql> create table bongjin_users (
+    -> id int(10) unsigned not null auto_increment primary key,
+    -> name varchar(512) not null comment 'name',
+    -> email varchar(512) not null comment 'email',
+    -> password varchar(512) not null comment 'pw',
+    -> created_at datetime default current_timestamp() comment 'created time'
+    -> );
+
+> create table bongjin_articles_5 (
+    -> id int(10) unsigned not null auto_increment primary key,
+    -> title varchar(512) not null comment 'name',
+    -> contents text not null comment 'in',
+    -> count int(11) default 0 comment 'view',
+    -> created_at datetime default current_timestamp() comment 'born'
+    -> );
+
+
+
+mysql> insert into post (writer, title, content) values ("bongjin", "i am bongjin", "this is bongjin's first article");

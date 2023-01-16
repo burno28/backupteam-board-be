@@ -1,26 +1,27 @@
-const express = require('express')
+const express = require('express')//사용하는 패키지
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
-//사용하는 npm i
-
+const mysql = require('mysql')
 
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
-//사용하는 앱
+// app.use(cors())
 
-const port = 4080
-const users = require('./db/users')
-const articles = require('./db/articles')
-//포트 설정,외부 db(로컬내 json으로 구현)
+const connection = mysql.createConnection({
+    host: "caredog-test.c0o6spnernvu.ap-northeast-2.rds.amazonaws.com",
+    user: "sparta",
+    password: "tmvkfmxk2022",
+    database: "sparta_backup",
+})
+
+connection.connect()//node.js와 mysql을 실제 연결함
 
 let corsOptions = {
     origin: 'http://localhost:3080',
     credentials: true
-}
-//cors 쓰려면 프론트 포트 지정할때 쓴데서 써봤습니다
+}//cors 쓰려면 프론트 포트 지정할때 쓴데서 써봤습니다,지금안함
 
 const jwtConfig = {
     secretKey: "secretKey",//시크렛키
@@ -30,56 +31,114 @@ const jwtConfig = {
         issuer: "bongjin"//발행자
     }
 
-}
-//jwt 쓰기, 밖으로 뺄까?
+}//jwt 쓰기, 밖으로 뺄까?
 
-app.get('/', (req, res) => {
-    const tenArticles = [...articles]
-    res.send(tenArticles.splice(0, 10))
-})
+// app.get('/', (req, res) => {
+
+//     const articles =  connection.query("select * from articles order by id desc")
+//     const tenArticles = [articles]
+//     res.send(tenArticles.splice(0, 10))
+// })
 //게시글 상위 10개 가져오는 API,
 
-// 로그인 API
+// 로그인 API api로 뺐음
 app.post('/login', (req, res) => {
-    //     - email, password 받아서 해당하는 유저가 존재하는지 확인
     const { email, password } = req.body
-    // const user = users.find(user => user.email === email && user.password === password)
+    // connection.query(`SELECT * FROM users WHERE email="${email}`, (err, result) =>{
+    //     if (err) return console.log(err)
+
+    //     if(result.length) {
+    //         console.log(result)
+    //         if (result[0].password === password) {
+    //             console.log("login-sucess")
+    //         }else{
+    //             console.log("login-fail")
+    //         }
+    //         }
+    //     })
+    // })
+
+    const sql = `select * from users where email = "${email}" and password = "${password}"`
+    if (email && password) {
+        connection.query(sql, (error, rows, fields) => {     
+            if (!email || password !== user.password) {
+                res.status(400).send({
+                  errorMessage: "이메일 또는 패스워드가 틀렸습니다.",
+                })
+                return
+              }
+            const token = jwt.sign({ name: user.name, email: user.email }, jwtConfig.secretKey, jwtConfig.options)
+            res.cookie('user_token', token)
+            console.log(token)
+}) }  })
+
+
+
+
+//쿠키로 특정 사용자 정보를 가져오는 API (JWT)
+app.get('/profile', (req, res) => {
+    const userToken = jwt.verify(req.cookies.jwt, jwtConfig.secretKey)
+
+    if (!userToken) {
+        return res.send("로그인 부탁드립니다")
+    }
     const user = users.find(user => user.email === email)
     if (!user) {
-        res.status(404).json({
-            errorMessage: '해당 아이디가 없습니다.'
-        })
+        return res.send("입력하신 email이 틀렸습니다")
     }
-    // const userPass = users.find(user => user.password === password)
-    // if (!userPass) {
-    //     res.status(404).json({
-    //         errorMessage: '비밀번호가 틀립니다.'
-    //     })
-    // } //이건 유저 비밀번호가 아닌 그냥 모든 비번중에 찾는거라 틀립니다
-
-    if (user.password !== password) {
-        res.status(404).json({
-            errorMessage: '비번이 틀렸습니다.'
-        })
-    }
-// 고침
-
-
-    const token = jwt.sign({ name: user.name, id: user.id }, jwtConfig.secretKey, jwtConfig.options)
-    res.cookie('jwt', token)
-    console.log(req.cookies)
-    res.send({ result: true })
+    res.json(user)
 })
 
 app.get('/articles', (req, res) => {
-    res.json(articles)
-})//게시글 보기,대강 한번에 다 보임
+    const { page } = req.query
+    const perPage = 3 //제 테이블 20개 칼럼이라 임시로 3
+    const startIndex = ((page || 1) - 1) * perPage //0111참조
+    connection.query(`select count(*) from bongjin_articles_1`, (error, rows, fields) => {
+        const lastPage = Math.ceil(rows[0].count / perPage)
+        connection.query(`select * from bongjin_articles_1 order by id desc limit ${perPage} offset ${startIndex}`, (error, rows, fields) => {
+          res.json({
+              pageInfo : {
+                perPage,
+                lastPage,
+                currentPage: page || 1
+              },
+              rows})
+        })
+      })
+    })
 
-app.post("/articles", (req, res) => {
+////게시글 등록
+// app.post("/articles",  async (req, res) => {
+//     const userToken = jwt.verify(req.cookies.jwt, jwtConfig.secretKey)
+//     if (!userToken) {//     - 로그인 했는지 확인 
+//         return res.send("로그인 부탁드립니다")
+//         //     - 로그인 안되어있으면 예외처리
+//         const { title, content } = req.body;
+//         try {
+//             await article.create({
+//                 title,
+//                 content,
+//                 author: "" //유저 넣어야 할거 같다
+//             });
+//             res.redirect("/"); //완료시 메인페이지로 이동
+//         } catch (err) {
+//             next(err);
+//         }
 
-})//게시글 쓰기
+//     }
+// })
+//// 꼬이는거 같아 잠시 봉인
 
 
-app.listen(port, () => {
-    console.log(port, '포트로 서버가 열렸어요!');
+
+//게시글 삭제, 주소에 넣을 걸 모르겠다
+// app.delete("/?", async (req, res) => {
+//     const {"찾기 기준"} = req.params;
+
+
+// });
+
+
+app.listen(4080, () => {
+    console.log('포트로 서버가 열렸어요!');
 });
