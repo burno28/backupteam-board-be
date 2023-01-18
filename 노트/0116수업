@@ -1,0 +1,49 @@
+1. 과제 리뷰
+
+perpage 할때 게시판 목록의 ... 누르게 하면 안됨
+
+
+
+2.수업
+
+모듈
+
+모듈은 다른 파일에 넣어서 분리 
+불러오고 내보냄
+
+const { jwtConfig } = require('./src/config/configuration.js')
+안되는 이유
+
+    secretKey: "secretKey",//시크렛키
+    options: {
+        algorithm: "HS256",//상황보고 주석화
+        expiresIn: "15m",//1분짧더라
+        issuer: "bongjin"//발행자
+    }
+
+이런걸 
+    {secretKey: "secretKey",//시크렛키}
+    {options: {
+        algorithm: "HS256",//상황보고 주석화
+        expiresIn: "15m",//1분짧더라
+        issuer: "bongjin"//발행자
+    }}
+
+    이런 식으로 계속 따로 구조분해 해줘야 해서
+    (정확하게 한거 아님)
+
+
+    n3.
+    db관련된 모든 걸 밖으로 빼겠다 (모듈)
+    repositories폴더 db.js
+
+
+컨트롤러(app.js)같은게 아니면 res하면 안도미, res가 없기도 하고
+
+
+mysql1은 동기적 프로그래밍이 안됨
+mysql2로 바꿔야할 이유임
+그래서 아이디 비번 따로 검사가 안됐다
+
+서버가 꺼질때 (코드 조져서)
+try catch 로 해보자
