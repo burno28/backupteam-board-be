@@ -1,7 +1,7 @@
 
 const jwt = require("jsonwebtoken")
 const { jwtConfig } = require("../config/config")
-const { getUserByEmailAndPassword, getUserInfo, checkEmail, createEmail } = require("../repositories/index")
+
 // 로그인 API 
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -12,7 +12,7 @@ const login = async (req, res) => {
         }
         const token = jwt.sign({ email: rows[0].email }, jwtConfig.secretKey, jwtConfig.options);
         res.cookie('jwt', token);
-
+        console.log('jwt')
         res.json({ message: "wellcome" });
     })
 }
@@ -37,12 +37,12 @@ const logout = async (req, res) => {
 //https://recordofwonseok.tistory.com/214 참조함
 
 
-const signup = async (req, res) => {
-    const { name, email, password } = req.body
+// const signup = async (req, res) => {
+//     const { name, email, password } = req.body
 
-    if (!email || !password || !name) {
-        return res.status(401).json({ message: "입력란 공백이 있습니다" })
-    }
+//     if (!email || !password || !name) {
+//         return res.status(401).json({ message: "입력란 공백이 있습니다" })
+//     }
 
     // const user = await checkEmail(email)
     //   if(user) {
@@ -51,7 +51,7 @@ const signup = async (req, res) => {
     //   await createEmail(name, email, password)
     //   res.json({message: "축하"})
 
-}
+// }
 
 
-module.exports = { login, getUserInfos, signup, logout }
+module.exports = { login, getUserInfos, logout }

@@ -1,8 +1,12 @@
-const {getAllArticles, getAticle, createArticle,upadateMyArticle,deleteMyArticle} = require("../repositories/index")
 const jwt = require("jsonwebtoken")
 const {jwtConfig} = require("../config/config")
+const mysql = require('mysql2')
 
-
+const connection = mysql.createConnection({
+    host: "caredog-test.c0o6spnernvu.ap-northeast-2.rds.amazonaws.com",
+    user: "sparta",
+    password: "tmvkfmxk2022",
+})
 
 //perPage했던 기능
 const getArticles = async (req, res) => {
@@ -10,10 +14,10 @@ const getArticles = async (req, res) => {
     const perPage = 3;//제 테이블 20개 칼럼이라 임시로 3
     const startIndex = ((page || 1) - 1) * perPage; //0111참조
 
-    connection.query(`select count(*) from bongjin_articles_1`, (error, rows, fields) => {
+    connection.query(`select count(*) from users`, (error, rows, fields) => {
         const lastPage = Math.ceil(rows[0].count / perPage)
 
-        connection.query(`select * from bongjin_articles_1 order by id desc limit ${perPage} offset ${startIndex}`, (error, rows, fields) => {
+        connection.query(`select * from users order by id desc limit ${perPage} offset ${startIndex}`, (error, rows, fields) => {
             res.json({
                 pageInfo: {
                     perPage,
@@ -43,7 +47,7 @@ const postArticle = async (req, res) => {
         return res.json({ message: "for members only" });
     }
     const { title, contents } = req.body
-    connection.query(`insert into bongjin_articles_1 (title, contents) values("${title}", "${contents}");`, () => {
+    connection.query(`insert into articles (title, contents) values("${title}", "${contents}");`, () => {
 
         res.json({ message: "article is on air" })
     })
@@ -58,7 +62,7 @@ const putArticle = async (req, res) => {
     }
     const { id } = req.params
     const { title, contents } = req.body
-    connection.query(`update bongjin_articles_1 set title = "${title}" , contents = "${contents}" where id = ${id}`, (error, rows, fields) => {
+    connection.query(`update articles set title = "${title}" , contents = "${contents}" where id = ${id}`, (error, rows, fields) => {
         res.json({ message: "수정 완료" })
     })
 };
@@ -70,7 +74,7 @@ const deleteArticle = async (req, res) => {
         return res.status(401).json({ message: "로그인해주세요" })
     }
     const { id } = req.params
-    connection.query(`delete from bongjin_articles_1 where id = "${id}"`, (error, rows, fields) => {
+    connection.query(`delete from articles where id = "${id}"`, (error, rows, fields) => {
         res.json("삭제 완료")
     })
 };

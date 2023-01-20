@@ -16,6 +16,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
+
+app.use("/articles", articleRouter)
+app.use(userRouter)
 // connection.connect();//node.js와 mysql을 실제 연결함
 
 app.listen(4080, () => {
