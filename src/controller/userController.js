@@ -2,11 +2,13 @@
 const jwt = require("jsonwebtoken")
 const { jwtConfig } = require("../config/config")
 
+const sequelize = require("../repositories/conn")
+
 // 로그인 API 
 const login = async (req, res) => {
     const { email, password } = req.body;
     const loginSql = `select * from users where email = "${email}" and password = "${password}";`
-    connection.query(loginSql, (error, rows, fields) => {
+    sequelize.query(loginSql, (error, rows, fields) => {
         if (!rows[0]) {
             return res.status(400).json({ message: "email not found" });
         }
@@ -36,22 +38,6 @@ const logout = async (req, res) => {
 }
 //https://recordofwonseok.tistory.com/214 참조함
 
-
-// const signup = async (req, res) => {
-//     const { name, email, password } = req.body
-
-//     if (!email || !password || !name) {
-//         return res.status(401).json({ message: "입력란 공백이 있습니다" })
-//     }
-
-    // const user = await checkEmail(email)
-    //   if(user) {
-    //     return res.status(401).json({message: "실패"})
-    //   }
-    //   await createEmail(name, email, password)
-    //   res.json({message: "축하"})
-
-// }
 
 
 module.exports = { login, getUserInfos, logout }

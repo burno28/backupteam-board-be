@@ -11,7 +11,7 @@ router.get('/profile', userController.getUserInfos)
 //ㄴㄴ쿠키로 특정 사용자 정보를 가져오는 API (JWT)
 router.get("/logout", userController.logout)
 //로그아웃
-router.post("/signup", userController.signup)
+// router.post("/signup", userController.signup)
 //회원가입
 
 module.exports = router
