@@ -1,5 +1,5 @@
-const user = require("../controller/user")
-const article = require("../controller/article")
+const user = require("./userRepositories.js")
+const article = require("./articleRepositories.js")
 
 module.exports = {
   ...user,
