@@ -1,4 +1,5 @@
 const {User} = require("../models/userModels")
+const {Article} = require("../models/articleModels")
 
 const getUserByEmailAndPassword = async (email, password) => {
   const user = await User.findOne({where : {email, password}})
@@ -20,9 +21,15 @@ const createEmail = async (name,email,password) => {
   return signupIsOkay
 }
 
+const myposts = async (id) => {
+  const myArticles = await Article.findAll({ where : {user_id :id} , limit:5, order: [["id", "DESC"]]})
+  return myArticles
+}
+
 module.exports = {
   getUserByEmailAndPassword,
   getUserInfo,
   checkEmail,
-  createEmail
+  createEmail,
+  myposts
 }

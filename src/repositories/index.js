@@ -1,5 +1,5 @@
-const user = require("./userRepositories.js")
-const article = require("./articleRepositories.js")
+const user = require("./userRepositories")
+const article = require("./articleRepositories")
 
 module.exports = {
   ...user,

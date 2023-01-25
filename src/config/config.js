@@ -9,6 +9,6 @@ const jwtConfig = {
 const corsOptions = {
     origin: 'http://localhost:3080',
     credentials: true
-};
+}
 
 module.exports = {jwtConfig,corsOptions}

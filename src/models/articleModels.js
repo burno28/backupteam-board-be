@@ -1,4 +1,4 @@
-const sequelize = require("../repositories/conn")
+const sequelize = require("../config/connect")
 const {DataTypes} = require("sequelize")
 
 const Article = sequelize.define("articles", {

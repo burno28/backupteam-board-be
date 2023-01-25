@@ -1,4 +1,4 @@
-const sequelize = require("../repositories/conn")
+const sequelize = require("../config/connect")
 const {DataTypes} = require('sequelize')
 
 const User = sequelize.define('users', {
@@ -16,6 +16,6 @@ const User = sequelize.define('users', {
   updatedAt: false,
   createdAt: "created_at"
 }
-);
+)
 
 module.exports = {User}

@@ -1,12 +1,12 @@
 const express = require("express")
 const router = express.Router()
 
-const {getArticles,getTheArticle,postArticle,putArticle,deleteArticle} = require("../controller/articleController")
+const {getArticles,getArticle,postArticle,putArticle,deleteArticle} = require("../controller/articleController")
 
 
 router.get("/", getArticles)
 //perPage했던 기능
-router.get("/:id", getTheArticle)
+router.get("/:id", getArticle)
 //특정게시글 상세열람
 router.post("/", postArticle)
 //게시글 등록

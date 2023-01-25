@@ -4,8 +4,8 @@ try {
   sequelize = new Sequelize('sparta_backup', 'sparta', 'tmvkfmxk2022', {
     host: 'caredog-test.c0o6spnernvu.ap-northeast-2.rds.amazonaws.com',
     dialect: "mysql"
-  });
-  console.log("DB 연결")
+  })
+  console.log("DB online")
 } catch (err) {
   console.log(err)
 }

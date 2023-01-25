@@ -6,11 +6,11 @@ const getAllArticles = async (perpage, p) => {
   return [lastPage,rows]
 }
 
-const getAticle = async (id) => {
+const getTheArticle = async (id) => {
   try {
     const article = await Article.findByPk(id)
     if (!article) {
-      throw new Error("Not Found")
+      throw new Error("no such article")
     }
     return article
   } catch (err) {
@@ -31,7 +31,7 @@ const upadateMyArticle = async (id, title, contents) => {
   try {
     const post = await Article.update({title,contents}, {where: {id}})
     if(!post) {
-      throw new Error("없음")
+      throw new Error("no article to put")
     }
   } catch (err) {
     console.error(err)
@@ -42,11 +42,11 @@ const deleteMyArticle = async (id) => {
   try {
     const post = await Article.destroy({where: {id}})
     if(!post) {
-      throw new Error("없음")
+      throw new Error("no article to del")
     }
   } catch (err) {
     console.error(err)
   }
 }
 
-module.exports = {getAllArticles, getAticle, createArticle, upadateMyArticle, deleteMyArticle}
+module.exports = {getAllArticles, getTheArticle, createArticle, upadateMyArticle, deleteMyArticle}
